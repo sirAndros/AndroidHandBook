@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HandBook</string>
+    <string name="tab_notes">Notes</string>
+    <string name="tab_tags">Tags</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="save_btn">Save</string>
+    <string name="cancel_btn">Cancel</string>
+</resources>
