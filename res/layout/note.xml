@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<LinearLayout android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" android:padding="10dp">
+              android:layout_height="match_parent"
+              android:paddingRight="20dp" android:paddingLeft="10dp" android:paddingTop="10dp"
+              android:paddingBottom="10dp">
 
     <DatePicker
             android:layout_width="wrap_content"
@@ -41,3 +45,34 @@
                 android:id="@+id/btn_cancel" android:layout_gravity="center_horizontal" android:layout_weight="1"/>
     </LinearLayout>
 </LinearLayout>
+    <SlidingDrawer
+            android:id="@+id/drawer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:content="@+id/drawerContent"
+            android:handle="@+id/drawerHandle"
+            android:orientation="horizontal"
+            >
+        <TextView
+                android:id="@+id/drawerHandle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T\nA\nG\nS"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:paddingRight="2dp"/>
+        <ScrollView
+                android:id="@+id/drawerContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#EE000000">
+            <LinearLayout
+                    android:id="@+id/tagsList"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+            </LinearLayout>
+        </ScrollView>
+    </SlidingDrawer>
+</FrameLayout>
