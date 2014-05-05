@@ -36,11 +36,11 @@ public class PageFragment extends Fragment {
         switch (itemType) {
             case Note:
                 if (notes == null)
-                    notes = inflater.inflate(R.layout.notes, container);
+                    notes = inflater.inflate(R.layout.notes, null);
                 return notes;
             case Tag:
                 if (tags == null)
-                    tags = inflater.inflate(R.layout.tags, container);
+                    tags = inflater.inflate(R.layout.tags, null);
                 return tags;
         }
         return null;

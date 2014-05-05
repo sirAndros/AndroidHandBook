@@ -28,7 +28,9 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
 
     ItemTypes itemType;
     public static DBHelper dbHelper;
-    private SimpleCursorAdapter scAdapter;
+    private SimpleCursorAdapter notesCursorAdapter;
+    private SimpleCursorAdapter tagsCursorAdapter;
+    private MyFragmentPagerAdapter pagerAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
         dbHelper = new DBHelper(this);
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(this, getSupportFragmentManager());
+        pagerAdapter = new MyFragmentPagerAdapter(this, getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -53,10 +55,10 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
 
                 switch (itemType) {
                     case Note:
-//                        RefreshNotes();
+                        RefreshNotes();
                         break;
                     case Tag:
-//                        RefreshTags();
+                        RefreshTags();
                         break;
                 }
             }
@@ -65,11 +67,25 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
             public void onPageScrollStateChanged(int i) {
             }
         });
+    }
 
-        scAdapter = new SimpleCursorAdapter(this, R.layout.note_item, null, new String[] {"Title", "Date", "Desc"},
-                new int[]{R.id.tv_title, R.id.tv_date, R.id.tv_desc}, 0);
-        ListView lvData = (ListView) ((PageFragment)pagerAdapter.getItem(0)).notes.findViewById(R.id.notesList);
-        lvData.setAdapter(scAdapter);
+
+
+    private void RefreshTags() {
+        if (tagsCursorAdapter == null)
+            CreateTags();
+    }
+
+    private void RefreshNotes() {
+        if (notesCursorAdapter == null)
+            CreateNotes();
+    }
+
+    private void CreateTags() {
+        tagsCursorAdapter = new SimpleCursorAdapter(this, R.layout.tag_item, null, new String[] {"Title"},
+                new int[]{R.id.tagName}, 0);
+        ListView lvData = (ListView) ((PageFragment)pagerAdapter.getItem(1)).tags.findViewById(R.id.notesList);
+        lvData.setAdapter(tagsCursorAdapter);
 
         // добавляем контекстное меню к списку
         registerForContextMenu(lvData);
@@ -78,14 +94,17 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
         getSupportLoaderManager().initLoader(0, null, this);
     }
 
-    private void RefreshTags() {
+    private void CreateNotes() {
+        notesCursorAdapter = new SimpleCursorAdapter(this, R.layout.note_item, null, new String[] {"Title", "Date", "Desc"},
+                new int[]{R.id.tv_title, R.id.tv_date, R.id.tv_desc}, 0);
+        ListView lvData = (ListView) ((PageFragment)pagerAdapter.getItem(0)).notes.findViewById(R.id.notesList);
+        lvData.setAdapter(notesCursorAdapter);
 
-    }
+        // добавляем контекстное меню к списку
+        registerForContextMenu(lvData);
 
-    private void RefreshNotes() {
-        ListView listView = (ListView) findViewById(R.id.notesList);
-//        ArrayList<String> notes = loadNotes();
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.note_item, notes);
+        // создаем лоадер для чтения данных
+        getSupportLoaderManager().initLoader(0, null, this);
     }
 
 
@@ -169,7 +188,7 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        scAdapter.swapCursor(cursor);
+        notesCursorAdapter.swapCursor(cursor);
     }
 
     @Override

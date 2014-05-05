@@ -9,6 +9,6 @@
     <string name="cancel_btn">Cancel</string>
     <string name="delete_menu">Remove</string>
     <string name="add_menu">Add new</string>
-    <string name="exit_toast">Press again to exit</string>
+    <string name="exit_toast">Press back again to exit</string>
     <string name="tags_vert">T\nA\nG\nS</string>
 </resources>
