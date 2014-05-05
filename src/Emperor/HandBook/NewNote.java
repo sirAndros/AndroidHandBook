@@ -21,7 +21,7 @@ public class NewNote extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note);
 
-        dbHelper = new DBHelper(this);
+        dbHelper = Main.dbHelper;
 
         Button save = (Button) findViewById(R.id.btn_save);
         save.setOnClickListener(this);
@@ -34,7 +34,7 @@ public class NewNote extends Activity implements View.OnClickListener {
         in_description = (EditText) findViewById(R.id.tb_desc);
 
         LinearLayout ta = (LinearLayout) findViewById(R.id.tagsList);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             CheckBox cb = new CheckBox(this);
             cb.setText(String.valueOf(i)); //TODO a tag name
             ta.addView(cb);

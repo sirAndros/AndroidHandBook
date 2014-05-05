@@ -1,26 +1,37 @@
 package Emperor.HandBook;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.HashMap;
+
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-    public MyFragmentPagerAdapter(FragmentManager fm) {
+
+    Context context;
+    HashMap<Integer, PageFragment> pageFragments;
+
+    public MyFragmentPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
+        this.context = context;
+        pageFragments = new HashMap<Integer, PageFragment>();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return PageFragment.newInstance(position);
+        if(!pageFragments.containsKey(position))
+            pageFragments.put(position, PageFragment.newInstance(position));
+        return pageFragments.get(position);
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return Main.getMainActivity().getString(R.string.tab_notes);
+                return context.getString(R.string.tab_notes);
             case 1:
-                return Main.getMainActivity().getString(R.string.tab_tags);
+                return context.getString(R.string.tab_tags);
         }
         return "";
     }

@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/save_btn"
                 android:id="@+id/btn_save" android:layout_gravity="center_horizontal" android:layout_weight="1"/>
-        <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Cancel"
+        <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/cancel_btn"
                 android:id="@+id/btn_cancel" android:layout_gravity="center_horizontal" android:layout_weight="1"/>
     </LinearLayout>
 </LinearLayout>
@@ -57,7 +57,7 @@
                 android:id="@+id/drawerHandle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="T\nA\nG\nS"
+                android:text="@string/tags_vert"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"/>
@@ -65,7 +65,7 @@
                 android:id="@+id/drawerContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#EE000000">
+                android:background="#EA000000">
             <LinearLayout
                     android:id="@+id/tagsList"
                     android:orientation="vertical"

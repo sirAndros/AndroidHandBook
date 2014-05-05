@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 public class PageFragment extends Fragment {
     static final String ARGUMENT_PAGE_ITEM_TYPE  = "arg_page_number";
 
+    View notes;
+    View tags;
+
     ItemTypes itemType;
 
     static PageFragment newInstance(int page) {
@@ -32,10 +35,23 @@ public class PageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         switch (itemType) {
             case Note:
-                return inflater.inflate(R.layout.notes, null);
+                if (notes == null)
+                    notes = inflater.inflate(R.layout.notes, container);
+                return notes;
             case Tag:
-                return inflater.inflate(R.layout.tags, null);
+                if (tags == null)
+                    tags = inflater.inflate(R.layout.tags, container);
+                return tags;
         }
         return null;
+    }
+
+
+    public View getNotesView() {
+        return notes;
+    }
+
+    public View getTagsView() {
+        return tags;
     }
 }

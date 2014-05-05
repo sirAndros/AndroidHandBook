@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HandBook</string>
+    <string name="tab_notes">Заметки</string>
+    <string name="tab_tags">Тэги</string>
+    <string name="title">Заголовок</string>
+    <string name="description">Описание</string>
+    <string name="save_btn">Сохранить</string>
+    <string name="cancel_btn">Отмена</string>
+    <string name="delete_menu">Удалить</string>
+    <string name="add_menu">Создать</string>
+    <string name="exit_toast">Нажмите еще раз чтобы выйти</string>
+    <string name="tags_vert">Т\nЭ\nГ\nИ</string>
+</resources>
