@@ -5,4 +5,22 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tagTitle" android:layout_weight="1"/>
+        <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_ok" android:text="@string/OK_btn"/>
+    </LinearLayout>
+    <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/relatedNotes" android:layout_gravity="center_horizontal" android:choiceMode="none"/>
 </LinearLayout>

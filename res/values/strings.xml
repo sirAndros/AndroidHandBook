@@ -11,4 +11,5 @@
     <string name="add_menu">Add new</string>
     <string name="exit_toast">Press back again to exit</string>
     <string name="tags_vert">T\nA\nG\nS</string>
+    <string name="OK_btn">OK</string>
 </resources>

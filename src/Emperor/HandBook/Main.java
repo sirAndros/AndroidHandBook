@@ -1,13 +1,10 @@
 package Emperor.HandBook;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -19,15 +16,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.concurrent.TimeUnit;
-
-public class Main extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class Main extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
     private static final int CM_DELETE_ID = 1;
     long backPressed;
 
     ItemTypes itemType;
     public static DBHelper dbHelper;
+    public static Main mainContext;
     private SimpleCursorAdapter notesCursorAdapter;
     private SimpleCursorAdapter tagsCursorAdapter;
     private MyFragmentPagerAdapter pagerAdapter;
@@ -39,6 +35,7 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
         itemType = ItemTypes.Note;
 
         dbHelper = new DBHelper(this);
+        mainContext = this;
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new MyFragmentPagerAdapter(this, getSupportFragmentManager());
@@ -84,14 +81,15 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
     private void CreateTags() {
         tagsCursorAdapter = new SimpleCursorAdapter(this, R.layout.tag_item, null, new String[] {"Title"},
                 new int[]{R.id.tagName}, 0);
-        ListView lvData = (ListView) ((PageFragment)pagerAdapter.getItem(1)).tags.findViewById(R.id.notesList);
+        ListView lvData = (ListView) ((PageFragment)pagerAdapter.getItem(1)).tags.findViewById(R.id.tagsList);
         lvData.setAdapter(tagsCursorAdapter);
 
         // добавляем контекстное меню к списку
         registerForContextMenu(lvData);
+        lvData.setOnItemClickListener(this);
 
         // создаем лоадер для чтения данных
-        getSupportLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(1, null, this);
     }
 
     private void CreateNotes() {
@@ -102,6 +100,7 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
 
         // добавляем контекстное меню к списку
         registerForContextMenu(lvData);
+        lvData.setOnItemClickListener(this);
 
         // создаем лоадер для чтения данных
         getSupportLoaderManager().initLoader(0, null, this);
@@ -147,7 +146,21 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
 
 
 
-
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Class<?> cls = null;
+        switch (itemType) {
+            case Tag:
+                cls = NewTag.class;
+                break;
+            case Note:
+                cls = NewNote.class;
+                break;
+        }
+        Intent intent = new Intent(this, cls);
+        intent.putExtra("ROW_ID", id);
+        startActivity(intent);
+    }
 
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -160,9 +173,9 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item
                     .getMenuInfo();
             // извлекаем id записи и удаляем соответствующую запись в БД
-            dbHelper.getWritableDatabase().delete(DBHelper.NOTES_TABLE, "_id = " + acmi.id, null);
+            dbHelper.getWritableDatabase().delete(itemType == ItemTypes.Note ? DBHelper.NOTES_TABLE : DBHelper.TAGS_TABLE, "_id = " + acmi.id, null);
             // получаем новый курсор с данными
-            getSupportLoaderManager().getLoader(0).forceLoad();
+            getSupportLoaderManager().getLoader(itemType == ItemTypes.Note ? 0 : 1).forceLoad();
             return true;
         }
         return super.onContextItemSelected(item);
@@ -171,7 +184,7 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
     @Override
     protected void onResume() {
         super.onResume();
-        Loader<Cursor> loader = getSupportLoaderManager().getLoader(0);
+        Loader<Cursor> loader = getSupportLoaderManager().getLoader(itemType == ItemTypes.Note ? 0 : 1);
         if (loader != null)
             loader.forceLoad();
     }
@@ -183,40 +196,23 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(this, dbHelper);
+        return new MyCursorLoader(this, dbHelper, itemType);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        notesCursorAdapter.swapCursor(cursor);
+        switch (itemType) {
+            case Note:
+                notesCursorAdapter.swapCursor(cursor);
+                break;
+            case Tag:
+                tagsCursorAdapter.swapCursor(cursor);
+                break;
+        }
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-    }
-
-    static class MyCursorLoader extends CursorLoader {
-        DBHelper dbHelper;
-
-        public MyCursorLoader(Context context, DBHelper db) {
-            super(context);
-            this.dbHelper = db;
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            Cursor cursor = getAllNotes();
-            try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return cursor;
-        }
-
-        private Cursor getAllNotes() {
-            SQLiteDatabase db = dbHelper.getReadableDatabase();
-            return db.query(DBHelper.NOTES_TABLE, null, null, null, null, null, null);
-        }
     }
 }

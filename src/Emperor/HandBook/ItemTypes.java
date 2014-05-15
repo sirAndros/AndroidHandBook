@@ -2,5 +2,7 @@ package Emperor.HandBook;
 
 public enum ItemTypes {
     Note,
-    Tag
+    Tag,
+    TagsForNote,
+    NotesForTag
 }

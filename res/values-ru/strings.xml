@@ -11,4 +11,5 @@
     <string name="add_menu">Создать</string>
     <string name="exit_toast">Нажмите еще раз чтобы выйти</string>
     <string name="tags_vert">Т\nЭ\nГ\nИ</string>
+    <string name="OK_btn">OK</string>
 </resources>
