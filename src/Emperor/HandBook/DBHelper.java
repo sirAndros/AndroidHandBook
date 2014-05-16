@@ -23,7 +23,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + ");");
         sqLiteDatabase.execSQL("create table " + NOTES_TAGS_TABLE + " ("
                 + "Note int,"
-                + "Tag int"
+                + "Tag int,"
+                + "UNIQUE(Note, Tag)"
                 + ");");
         sqLiteDatabase.execSQL("create table " + TAGS_TABLE + " ("
                 + "_id integer primary key autoincrement,"

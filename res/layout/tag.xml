@@ -8,16 +8,17 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" android:focusable="true" android:focusableInTouchMode="true">
         <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/tagTitle" android:layout_weight="1"/>
+                android:id="@+id/tagTitle" android:layout_weight="1" android:singleLine="true"
+                android:inputType="text"/>
         <Button
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_ok" android:text="@string/OK_btn"/>
+                android:id="@+id/btn_ok" android:text="@string/OK_btn" android:onClick="onClick"/>
     </LinearLayout>
     <ListView
             android:layout_width="match_parent"

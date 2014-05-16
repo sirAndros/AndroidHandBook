@@ -10,6 +10,7 @@ import android.widget.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -21,6 +22,7 @@ public class NewNote extends Activity implements View.OnClickListener {
     DatePicker in_datePicker;
     EditText in_title, in_description;
     long id = -1;
+    ArrayList<TagEntity> tags = new ArrayList<TagEntity>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,12 +42,14 @@ public class NewNote extends Activity implements View.OnClickListener {
         in_description = (EditText) findViewById(R.id.tb_desc);
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(DBHelper.TAGS_TABLE, null, null, null, null, null, null);
+        Cursor cursor = db.query(DBHelper.TAGS_TABLE, new String[]{"_id", "Title"}, null, null, null, null, null);
         LinearLayout ta = (LinearLayout) findViewById(R.id.tagsList);
+
         while (cursor.moveToNext()) {
             CheckBox cb = new CheckBox(this);
-            cb.setText(cursor.getString(cursor.getColumnIndex("Title")));
+            cb.setText(cursor.getString(1));
             ta.addView(cb);
+            tags.add(new TagEntity(cb, cursor.getLong(0)));
         }
 
         Bundle extras = getIntent().getExtras();
@@ -58,6 +62,16 @@ public class NewNote extends Activity implements View.OnClickListener {
                     in_title.setText(cur.getString(0));
                     in_description.setText(cur.getString(1));
                     setDateToDatePicker(cur.getString(2));
+                }
+                cur = db.query(DBHelper.NOTES_TAGS_TABLE, new String[]{"Tag"}, "Note = " + String.valueOf(id), null, null, null, null);
+                while (cur.moveToNext()) {
+                    long tagID = cur.getLong(0);
+                    for (TagEntity tag : tags) {
+                        if (tag.id == tagID) {
+                            tag.checkBox.setChecked(true);
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -88,9 +102,17 @@ public class NewNote extends Activity implements View.OnClickListener {
         cv.put("Desc", in_description.getText().toString());
         cv.put("Date", getDateString());
         if (id == -1)
-            db.insert(DBHelper.NOTES_TABLE, null, cv);
+            id = db.insert(DBHelper.NOTES_TABLE, null, cv);
         else
             db.update(DBHelper.NOTES_TABLE, cv, "_id = " + String.valueOf(id), null);
+
+        for (TagEntity tagEntity : tags) {
+            if (tagEntity.checkBox.isChecked()) {
+                db.execSQL("insert or ignore into " + DBHelper.NOTES_TAGS_TABLE + "(Note,Tag) values (" + id + ", " + tagEntity.id + ")");
+            } else {
+                db.delete(DBHelper.NOTES_TAGS_TABLE, "Note = " + id + " and Tag = " + tagEntity.id, null);
+            }
+        }
     }
 
     private String getDateString() {
@@ -112,6 +134,17 @@ public class NewNote extends Activity implements View.OnClickListener {
             );
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    class TagEntity {
+        public CheckBox checkBox;
+        public long id;
+
+        TagEntity(CheckBox checkBox, long id) {
+            this.checkBox = checkBox;
+            this.id = id;
         }
     }
 }

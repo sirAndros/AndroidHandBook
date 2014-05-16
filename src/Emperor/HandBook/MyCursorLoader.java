@@ -42,7 +42,7 @@ public class MyCursorLoader extends CursorLoader {
         }
 
         try {
-            TimeUnit.MILLISECONDS.sleep(750);
+            TimeUnit.MILLISECONDS.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -51,21 +51,21 @@ public class MyCursorLoader extends CursorLoader {
 
     private Cursor getNotesForTag() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        return db.query(DBHelper.NOTES_TABLE + " join " + DBHelper.NOTES_TAGS_TABLE + " on Note = _id", null, "_id = " + id, null, null, null, null);
+        return db.query(DBHelper.NOTES_TABLE + " join " + DBHelper.NOTES_TAGS_TABLE + " on Note = _id", null, "Tag = " + id, null, null, null, "Note");
     }
 
     private Cursor getTagsForNote() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        return db.query(DBHelper.TAGS_TABLE + " join " + DBHelper.NOTES_TAGS_TABLE + " on Tag = _id", null, "_id = " + id, null, null, null, null);
+        return db.query(DBHelper.TAGS_TABLE + " join " + DBHelper.NOTES_TAGS_TABLE + " on Tag = _id", null, "Note = " + id, null, null, null, "Note");
     }
 
     private Cursor getAllTags() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        return db.query(DBHelper.TAGS_TABLE, null, null, null, null, null, null);
+        return db.query(DBHelper.TAGS_TABLE, null, null, null, null, null, "_id");
     }
 
     private Cursor getAllNotes() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        return db.query(DBHelper.NOTES_TABLE, null, null, null, null, null, null);
+        return db.query(DBHelper.NOTES_TABLE, null, null, null, null, null, "Date");
     }
 }

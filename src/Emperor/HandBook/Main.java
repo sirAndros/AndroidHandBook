@@ -23,7 +23,7 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
 
     ItemTypes itemType;
     public static DBHelper dbHelper;
-    public static Main mainContext;
+    //public static Main mainContext;
     private SimpleCursorAdapter notesCursorAdapter;
     private SimpleCursorAdapter tagsCursorAdapter;
     private MyFragmentPagerAdapter pagerAdapter;
@@ -35,7 +35,7 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
         itemType = ItemTypes.Note;
 
         dbHelper = new DBHelper(this);
-        mainContext = this;
+        //mainContext = this;
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new MyFragmentPagerAdapter(this, getSupportFragmentManager());
@@ -84,7 +84,6 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
         ListView lvData = (ListView) ((PageFragment)pagerAdapter.getItem(1)).tags.findViewById(R.id.tagsList);
         lvData.setAdapter(tagsCursorAdapter);
 
-        // добавляем контекстное меню к списку
         registerForContextMenu(lvData);
         lvData.setOnItemClickListener(this);
 
@@ -98,7 +97,6 @@ public class Main extends FragmentActivity implements LoaderManager.LoaderCallba
         ListView lvData = (ListView) ((PageFragment)pagerAdapter.getItem(0)).notes.findViewById(R.id.notesList);
         lvData.setAdapter(notesCursorAdapter);
 
-        // добавляем контекстное меню к списку
         registerForContextMenu(lvData);
         lvData.setOnItemClickListener(this);
 
