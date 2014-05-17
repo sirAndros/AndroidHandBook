@@ -97,20 +97,26 @@ public class NewNote extends Activity implements View.OnClickListener {
 
     private void save() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("Title", in_title.getText().toString());
-        cv.put("Desc", in_description.getText().toString());
-        cv.put("Date", getDateString());
-        if (id == -1)
-            id = db.insert(DBHelper.NOTES_TABLE, null, cv);
-        else
-            db.update(DBHelper.NOTES_TABLE, cv, "_id = " + String.valueOf(id), null);
-
-        for (TagEntity tagEntity : tags) {
-            if (tagEntity.checkBox.isChecked()) {
-                db.execSQL("insert or ignore into " + DBHelper.NOTES_TAGS_TABLE + "(Note,Tag) values (" + id + ", " + tagEntity.id + ")");
-            } else {
-                db.delete(DBHelper.NOTES_TAGS_TABLE, "Note = " + id + " and Tag = " + tagEntity.id, null);
+        String title = in_title.getText().toString();
+        if (!"".equals(title)) {
+            ContentValues cv = new ContentValues();
+            cv.put("Title", title);
+            cv.put("Desc", in_description.getText().toString());
+            cv.put("Date", getDateString());
+            if (id == -1)
+                id = db.insert(DBHelper.NOTES_TABLE, null, cv);
+            else
+                db.update(DBHelper.NOTES_TABLE, cv, "_id = " + String.valueOf(id), null);
+        } else {
+            Toast.makeText(getBaseContext(), getString(R.string.emptyNoteTitle), Toast.LENGTH_SHORT).show();
+        }
+        if (id != -1) {
+            for (TagEntity tagEntity : tags) {
+                if (tagEntity.checkBox.isChecked()) {
+                    db.execSQL("insert or ignore into " + DBHelper.NOTES_TAGS_TABLE + "(Note,Tag) values (" + id + ", " + tagEntity.id + ")");
+                } else {
+                    db.delete(DBHelper.NOTES_TAGS_TABLE, "Note = " + id + " and Tag = " + tagEntity.id, null);
+                }
             }
         }
     }

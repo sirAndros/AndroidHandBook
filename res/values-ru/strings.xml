@@ -12,4 +12,6 @@
     <string name="exit_toast">Нажмите еще раз чтобы выйти</string>
     <string name="tags_vert">Т\nЭ\nГ\nИ</string>
     <string name="OK_btn">OK</string>
+    <string name="emptyTagMessage">Нельзя сохранить тэг с пустым заголовком</string>
+    <string name="emptyNoteTitle">Заголовок заметки не может быть пустым!</string>
 </resources>

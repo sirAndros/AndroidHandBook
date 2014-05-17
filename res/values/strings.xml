@@ -12,4 +12,6 @@
     <string name="exit_toast">Press back again to exit</string>
     <string name="tags_vert">T\nA\nG\nS</string>
     <string name="OK_btn">OK</string>
+    <string name="emptyTagMessage">Can\'t save empty tag</string>
+    <string name="emptyNoteTitle">Title can not be empty</string>
 </resources>

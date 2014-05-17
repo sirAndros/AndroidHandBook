@@ -3,6 +3,7 @@ package Emperor.HandBook;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * Created by Emperor on 15.04.14.
@@ -112,12 +114,21 @@ public class NewTag extends FragmentActivity implements View.OnClickListener, Lo
     }
 
     private void save() {
+        String title = tagTitle.getText().toString();
+        if ("".equals(title)) {
+            Toast.makeText(getBaseContext(), getString(R.string.emptyTagMessage), Toast.LENGTH_SHORT).show();
+            return;
+        }
         SQLiteDatabase db = Main.dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("Title", tagTitle.getText().toString());
+        cv.put("Title", title);
 
-        if (id == -1)
-            db.insert(DBHelper.TAGS_TABLE, null, cv);
+        if (id == -1) {
+            try {
+                db.insert(DBHelper.TAGS_TABLE, null, cv);
+            } catch (SQLiteConstraintException e) {
+            }
+        }
         else
             db.update(DBHelper.TAGS_TABLE, cv, "_id = " + String.valueOf(id), null);
     }
